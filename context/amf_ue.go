@@ -92,7 +92,7 @@ type AmfUe struct {
 	UnauthenticatedSupi bool          `json:"unauthenticatedSupi,omitempty"`
 	Gpsi                string        `json:"gpsi,omitempty"`
 	Pei                 string        `json:"pei,omitempty"`
-	Tmsi                int32         `json:"tmsi,omitempty"` // 5G-Tmsi
+	Tmsi                int64         `json:"tmsi,omitempty"` // 5G-Tmsi
 	Guti                string        `json:"guti,omitempty"`
 	GroupID             string        `json:"groupID,omitempty"`
 	EBI                 int32         `json:"ebi,omitempty"`
@@ -484,7 +484,7 @@ func (ue *AmfUe) Remove() {
 	}
 
 	if AMF_Self().EnableDbStore {
-		if err := AMF_Self().Drsm.ReleaseInt32ID(ue.Tmsi); err != nil {
+		if err := AMF_Self().Drsm.ReleaseInt64ID(ue.Tmsi); err != nil {
 			logger.ContextLog.Errorf("Error releasing RanUe: %v", err)
 		}
 	} else {
@@ -1079,7 +1079,7 @@ func (ueContext *AmfUe) PublishUeCtxtInfo() {
 	kafkaSmCtxt.Imsi = ueContext.Supi
 	kafkaSmCtxt.AmfId = ueContext.ServingAMF.NfId
 	kafkaSmCtxt.Guti = ueContext.Guti
-	kafkaSmCtxt.Tmsi = ueContext.Tmsi
+	kafkaSmCtxt.Tmsi = int32(ueContext.Tmsi)
 	kafkaSmCtxt.AmfIp = ueContext.AmfInstanceIp
 	if ueContext.RanUe != nil && ueContext.RanUe[models.AccessType__3_GPP_ACCESS] != nil {
 		kafkaSmCtxt.AmfNgapId = ueContext.RanUe[models.AccessType__3_GPP_ACCESS].AmfUeNgapId

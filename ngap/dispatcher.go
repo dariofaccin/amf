@@ -67,7 +67,7 @@ func DispatchLb(sctplbMsg *sdcoreAmfServer.SctplbMessage, Amf2RanMsgChan chan *s
 		/* checking whether same AMF instance can handle this message */
 		/* redirect it to correct owner if required */
 		if amfSelf.EnableDbStore {
-			id, err := amfSelf.Drsm.FindOwnerInt32ID(int32(ngapId.Value))
+			id, err := amfSelf.Drsm.FindOwnerInt64ID(ngapId.Value)
 			if id == nil || err != nil {
 				ran.Log.Warningf("DispatchLb, Couldn't find owner for amfUeNgapid: %v", ngapId.Value)
 			} else if id.PodName != os.Getenv("HOSTNAME") {

@@ -6,14 +6,14 @@
 package util
 
 import (
+	"github.com/omec-project/amf/drsm"
 	"github.com/omec-project/amf/logger"
-	"github.com/omec-project/util/drsm"
 )
 
 type MockDrsmInterface interface {
-	AllocateInt32ID() (int32, error)
-	ReleaseInt32ID(id int32) error
-	FindOwnerInt32ID(id int32) (*drsm.PodId, error)
+	AllocateInt64ID() (int64, error)
+	ReleaseInt64ID(id int64) error
+	FindOwnerInt64ID(id int64) (*drsm.PodId, error)
 	AcquireIp(pool string) (string, error)
 	ReleaseIp(pool, ip string) error
 	CreateIpPool(poolName string, ipPool string) error
@@ -34,17 +34,17 @@ func (d *MockDrsm) DeletePod(s string) {
 	logger.AppLog.Info("MockDeletePod")
 }
 
-func (d *MockDrsm) AllocateInt32ID() (int32, error) {
+func (d *MockDrsm) AllocateInt64ID() (int64, error) {
 	logger.AppLog.Info("MockAllocate")
 	return 1, nil
 }
 
-func (d *MockDrsm) ReleaseInt32ID(id int32) error {
+func (d *MockDrsm) ReleaseInt64ID(id int64) error {
 	logger.AppLog.Info("MockRelease")
 	return nil
 }
 
-func (d *MockDrsm) FindOwnerInt32ID(id int32) (*drsm.PodId, error) {
+func (d *MockDrsm) FindOwnerInt64ID(id int64) (*drsm.PodId, error) {
 	return nil, nil
 }
 

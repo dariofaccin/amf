@@ -18,10 +18,10 @@ import (
 	"sync"
 	"time"
 
+	"github.com/omec-project/amf/drsm"
 	"github.com/omec-project/amf/factory"
 	"github.com/omec-project/amf/logger"
 	"github.com/omec-project/openapi/models"
-	"github.com/omec-project/util/drsm"
 	"github.com/omec-project/util/idgenerator"
 )
 
@@ -113,15 +113,13 @@ func NewPlmnSupportItem() (item factory.PlmnSupportItem) {
 	return
 }
 
-func (context *AMFContext) TmsiAllocate() int32 {
-	var val int32
+func (context *AMFContext) TmsiAllocate() int64 {
+	var val int64
 	var err error
 	if context.EnableDbStore {
-		val, err = context.Drsm.AllocateInt32ID()
+		val, err = context.Drsm.AllocateInt64ID()
 	} else {
-		var tmp int64
-		tmp, err = AllocateUniqueID(&tmsiGenerator, "tmsi")
-		val = int32(tmp)
+		val, err = AllocateUniqueID(&tmsiGenerator, "tmsi")
 	}
 	if err != nil {
 		logger.ContextLog.Errorf("Allocate TMSI error: %+v", err)
@@ -135,9 +133,7 @@ func (context *AMFContext) AllocateAmfUeNgapID() (int64, error) {
 	var val int64
 	var err error
 	if context.EnableDbStore {
-		var tmp int32
-		tmp, err = context.Drsm.AllocateInt32ID()
-		val = int64(tmp)
+		val, err = context.Drsm.AllocateInt64ID()
 	} else {
 		val, err = AllocateUniqueID(&amfUeNGAPIDGenerator, "amfUeNgapID")
 	}
@@ -163,7 +159,7 @@ func (context *AMFContext) ReAllocateGutiToUe(ue *AmfUe) {
 	var err error
 	servedGuami := context.ServedGuamiList[0]
 	if context.EnableDbStore {
-		err = context.Drsm.ReleaseInt32ID(ue.Tmsi)
+		err = context.Drsm.ReleaseInt64ID(ue.Tmsi)
 	} else {
 		tmsiGenerator.FreeID(int64(ue.Tmsi))
 	}
@@ -205,14 +201,12 @@ func (context *AMFContext) AllocateRegistrationArea(ue *AmfUe, anType models.Acc
 }
 
 func (context *AMFContext) NewAMFStatusSubscription(subscriptionData models.SubscriptionData) (subscriptionID string) {
-	var id int32
+	var id int64
 	var err error
 	if context.EnableDbStore {
-		id, err = context.Drsm.AllocateInt32ID()
+		id, err = context.Drsm.AllocateInt64ID()
 	} else {
-		var tmp int64
-		tmp, err = amfStatusSubscriptionIDGenerator.Allocate()
-		id = int32(tmp)
+		id, err = amfStatusSubscriptionIDGenerator.Allocate()
 	}
 	if err != nil {
 		logger.ContextLog.Errorf("Allocate subscriptionID error: %+v", err)
@@ -240,7 +234,7 @@ func (context *AMFContext) DeleteAMFStatusSubscription(subscriptionID string) {
 		logger.ContextLog.Error(err)
 	} else {
 		if context.EnableDbStore {
-			err = context.Drsm.ReleaseInt32ID(int32(id))
+			err = context.Drsm.ReleaseInt64ID(id)
 		} else {
 			amfStatusSubscriptionIDGenerator.FreeID(id)
 		}

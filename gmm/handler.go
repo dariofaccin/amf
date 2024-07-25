@@ -1432,7 +1432,7 @@ func HandleIdentityResponse(ue *context.AmfUe, identityResponse *nasMessage.Iden
 		if tmp, err := strconv.ParseInt(sTmsi[4:], 10, 32); err != nil {
 			return err
 		} else {
-			ue.Tmsi = int32(tmp)
+			ue.Tmsi = tmp
 		}
 		ue.GmmLog.Debugf("get 5G-S-TMSI: %s", sTmsi)
 	case nasMessage.MobileIdentity5GSTypeImei:

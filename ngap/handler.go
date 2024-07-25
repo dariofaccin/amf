@@ -1526,7 +1526,7 @@ func HandleInitialUEMessage(ran *context.AmfRan, message *ngapType.NGAPPDU, sctp
 				ranUe.Log.Tracef("find AmfUe [GUTI: %s]", guti)
 				/* checking the guti-ue belongs to this amf instance */
 				if amfSelf.EnableDbStore {
-					id, err := amfSelf.Drsm.FindOwnerInt32ID(amfUe.Tmsi)
+					id, err := amfSelf.Drsm.FindOwnerInt64ID(amfUe.Tmsi)
 					if err != nil {
 						ranUe.Log.Errorf("Error checking the guti-ue in this instance: %v", err)
 					}
